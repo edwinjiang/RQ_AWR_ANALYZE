@@ -16,7 +16,7 @@ from flask import Flask, request, session, g, redirect, url_for, abort, \
      render_template, flash
 import dboperate as dbo
 
-# use git repository to manage this project
+# use git repository to manage this project. Edwin
 
 # create our little application :)
 app = Flask(__name__)
