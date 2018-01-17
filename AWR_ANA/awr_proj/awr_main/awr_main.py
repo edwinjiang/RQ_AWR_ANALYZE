@@ -1,24 +1,18 @@
 # -*- coding: utf-8 -*-
-"""
-    Flaskr
-    ~~~~~~
-
-    A microblog example application written as Flask tutorial with
-    Flask and sqlite3.
-
-    :copyright: (c) 2015 by Armin Ronacher.
-    :license: BSD, see LICENSE for more details.
-"""
 
 #from sqlite3 import dbapi2 as sqlite3
 from flask import Flask, request, session, g, redirect, url_for, abort, \
      render_template, flash
+from flask_bootstrap import Bootstrap
 import dboperate as dbo
+from form import  upload_awr
+import mobiledevice
 
 # use git branch named flask_branch to manage this subproject. Edwin
 
 # create our little application :)
 app = Flask(__name__)
+bootstrap = Bootstrap(app)
 
 # Load default config and override config from an environment variable
 # app.config.update(dict(
@@ -95,13 +89,15 @@ def initdb_command():
 
 @app.route('/')
 def show_entries():
+    form = upload_awr()
     conn_args = dict(host=app.config['HOST'], user=app.config['USERNAME'], passwd=app.config['PASSWORD'], port=app.config['PORT'])
     with dbo.get_conn(**conn_args) as dbcon:
         with dbcon as cur:
             cur.execute('use flask')
             cur.execute('select title, content from entries order by id desc')
             entries = cur.fetchall()
-    return render_template('show_entries.html', entries=entries)
+    #return render_template('show_entries.html', entries=entries)
+    return render_template('index.html', entries=entries,form=form)
 
 
 @app.route('/add', methods=['POST'])
@@ -139,3 +135,10 @@ def logout():
     session.pop('logged_in', None)
     flash('You were logged out')
     return redirect(url_for('login'))
+
+@app.route('/result')
+def mobile_ana():
+    pass
+    #mobiledevice.main_ana()
+    #testprint.testpr()
+    #return redirect(url_for('show_entries'))
